@@ -33,4 +33,11 @@ router.post('/', validateProduct, rescue(async (req, res, _next) => {
   return res.status(StatusCodes.CREATED).json({ message: 'success' });
 }));
 
+router.put('/:id', validateProduct, rescue(async (req, res, _next) => {
+  const { name, quantity } = req.body;
+  console.log(name, quantity);
+
+  return res.status(StatusCodes.OK).json({ message: 'success' });
+}));
+
 module.exports = router;
