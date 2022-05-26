@@ -36,11 +36,13 @@ router.post('/', validateSale, rescue(async (req, res, next) => {
   return res.status(StatusCodes.CREATED).json(data);
 }));
 
-router.put('/:id', validateSale, rescue(async (req, res, _next) => {
+router.put('/:id', validateSale, rescue(async (req, res, next) => {
   const products = req.body;
   const { id } = req.params;
 
   const data = await salesService.updateSale(id, products);
+
+  if (data.error) return next(data.error);
 
   return res.status(StatusCodes.OK).json(data);
 }));
