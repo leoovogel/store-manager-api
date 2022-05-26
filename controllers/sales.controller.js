@@ -27,9 +27,9 @@ router.get('/', rescue(async (_req, res) => {
 }));
 
 router.post('/', validateSale, rescue(async (req, res, next) => {
-  const sales = req.body;
+  const products = req.body;
 
-  const data = await salesService.createSale(sales);
+  const data = await salesService.createSale(products);
 
   if (data.error) return next(data.error);
 
@@ -37,10 +37,12 @@ router.post('/', validateSale, rescue(async (req, res, next) => {
 }));
 
 router.put('/:id', validateSale, rescue(async (req, res, _next) => {
-  const { name, quantity } = req.body;
-  console.log(name, quantity);
+  const products = req.body;
+  const { id } = req.params;
 
-  return res.status(StatusCodes.OK).json({ message: 'success' });
+  const data = await salesService.updateSale(id, products);
+
+  return res.status(StatusCodes.OK).json(data);
 }));
 
 module.exports = router;
