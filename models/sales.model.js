@@ -31,7 +31,14 @@ function getSaleById(id) {
     [id]);
 }
 
+function createSale() {
+  return database.execute(`
+    INSERT INTO sales ()
+    VALUES ()`);
+}
+
 module.exports = {
   getAllSales,
   getSaleById,
+  createSale,
 };

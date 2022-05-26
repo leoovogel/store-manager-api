@@ -26,11 +26,14 @@ router.get('/', rescue(async (_req, res) => {
   return res.status(StatusCodes.OK).json(sales);
 }));
 
-router.post('/', validateSale, rescue(async (req, res, _next) => {
-  const { name, quantity } = req.body;
-  console.log(name, quantity);
+router.post('/', validateSale, rescue(async (req, res, next) => {
+  const sales = req.body;
 
-  return res.status(StatusCodes.CREATED).json({ message: 'success' });
+  const data = await salesService.createSale(sales);
+
+  if (data.error) return next(data.error);
+
+  return res.status(StatusCodes.CREATED).json(data);
 }));
 
 router.put('/:id', validateSale, rescue(async (req, res, _next) => {
