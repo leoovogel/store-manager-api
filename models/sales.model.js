@@ -14,6 +14,24 @@ function getAllSales() {
       sale_id, product_id`);
 }
 
+function getSaleById(id) {
+  return database.execute(`
+    SELECT
+      date, product_id AS productId, quantity
+    FROM
+      sales
+    JOIN
+      sales_products AS sp
+    ON
+      sales.id = sp.sale_id
+    WHERE
+      sale_id = ?
+    ORDER BY
+      product_id`,
+    [id]);
+}
+
 module.exports = {
   getAllSales,
+  getSaleById,
 };
