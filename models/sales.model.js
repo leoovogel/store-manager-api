@@ -37,8 +37,16 @@ function createSale() {
     VALUES ()`);
 }
 
+function deleteSale(id) {
+  return database.execute(`
+    DELETE FROM sales
+    WHERE id = ?`,
+    [id]);
+}
+
 module.exports = {
   getAllSales,
   getSaleById,
   createSale,
+  deleteSale,
 };

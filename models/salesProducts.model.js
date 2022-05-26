@@ -21,7 +21,17 @@ function updateSales(saleId, productId, quantity) {
     [quantity, saleId, productId]);
 }
 
+function deleteSale(id) {
+  return database.execute(`
+    DELETE FROM
+      sales_products
+    WHERE
+      sale_id = ?`,
+    [id]);
+}
+
 module.exports = {
   bindSaleWithProducts,
   updateSales,
+  deleteSale,
 };

@@ -47,4 +47,14 @@ router.put('/:id', validateSale, rescue(async (req, res, next) => {
   return res.status(StatusCodes.OK).json(data);
 }));
 
+router.delete('/:id', rescue(async (req, res, next) => {
+  const { id } = req.params;
+
+  const data = await salesService.deleteSale(id);
+
+  if (data.error) return next(data.error);
+
+  return res.status(StatusCodes.NO_CONTENT).end();
+}));
+
 module.exports = router;
