@@ -31,18 +31,20 @@ router.post('/', validateProduct, rescue(async (req, res, next) => {
 
   const data = await productsService.createProduct({ name, quantity });
 
-  if (data.error) {
-    return next(data.error);
-  }
+  if (data.error) return next(data.error);
 
   return res.status(StatusCodes.CREATED).json(data);
 }));
 
-router.put('/:id', validateProduct, rescue(async (req, res, _next) => {
+router.put('/:id', validateProduct, rescue(async (req, res, next) => {
   const { name, quantity } = req.body;
-  console.log(name, quantity);
+  const { id } = req.params;
 
-  return res.status(StatusCodes.OK).json({ message: 'success' });
+  const data = await productsService.updateProduct({ id, name, quantity });
+
+  if (data.error) return next(data.error);
+
+  return res.status(StatusCodes.OK).json(data);
 }));
 
 module.exports = router;

@@ -29,9 +29,22 @@ function createProduct(product) {
     [product.name, product.quantity]);
 }
 
+function updateProduct(product) {
+  return database.execute(`
+    UPDATE
+      products
+    SET
+      name = ?,
+      quantity = ?
+    WHERE
+      id = ?`,
+    [product.name, product.quantity, product.id]);
+}
+
 module.exports = {
   getAllProducts,
   getProductById,
   getProductByName,
   createProduct,
+  updateProduct,
 };

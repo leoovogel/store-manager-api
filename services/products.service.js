@@ -19,8 +19,25 @@ async function createProduct({ name, quantity }) {
   return { id: newProduct.insertId, name, quantity };
 }
 
+async function updateProduct(product) {
+  const [result] = await productsModel.getProductById(product.id);
+
+  if (!result.length) {
+    return { error: { status: 404, message: 'Product not found' } };
+  }
+
+  const [data] = await productsModel.updateProduct(product);
+
+  if (!data.affectedRows) {
+    return { error: { status: 500, message: 'Internal server error' } };
+  }
+
+  return product;
+}
+
 module.exports = {
   getProducts,
   getProductById,
   createProduct,
+  updateProduct,
 };
