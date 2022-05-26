@@ -28,9 +28,10 @@ router.get('/', rescue(async (_req, res) => {
 
 router.post('/', validateProduct, rescue(async (req, res, _next) => {
   const { name, quantity } = req.body;
-  console.log(name, quantity);
 
-  return res.status(StatusCodes.CREATED).json({ message: 'success' });
+  const newProduct = await productsService.createProduct({ name, quantity });
+
+  return res.status(StatusCodes.CREATED).json(newProduct);
 }));
 
 router.put('/:id', validateProduct, rescue(async (req, res, _next) => {
