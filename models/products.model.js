@@ -41,10 +41,20 @@ function updateProduct(product) {
     [product.name, product.quantity, product.id]);
 }
 
+function deleteProduct(id) {
+  return database.execute(`
+    DELETE FROM
+      products
+    WHERE
+      id = ?`,
+    [id]);
+}
+
 module.exports = {
   getAllProducts,
   getProductById,
   getProductByName,
   createProduct,
   updateProduct,
+  deleteProduct,
 };
