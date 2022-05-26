@@ -12,6 +12,14 @@ function getProductById(id) {
     [id]);
 }
 
+function getProductByName(name) {
+  return database.execute(`
+    SELECT * FROM products
+    WHERE
+      name = ?`,
+    [name]);
+}
+
 function createProduct(product) {
   return database.execute(`
     INSERT INTO
@@ -24,5 +32,6 @@ function createProduct(product) {
 module.exports = {
   getAllProducts,
   getProductById,
+  getProductByName,
   createProduct,
 };

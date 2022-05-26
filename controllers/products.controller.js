@@ -26,12 +26,16 @@ router.get('/', rescue(async (_req, res) => {
   res.status(StatusCodes.OK).json(products);
 }));
 
-router.post('/', validateProduct, rescue(async (req, res, _next) => {
+router.post('/', validateProduct, rescue(async (req, res, next) => {
   const { name, quantity } = req.body;
 
-  const newProduct = await productsService.createProduct({ name, quantity });
+  const data = await productsService.createProduct({ name, quantity });
 
-  return res.status(StatusCodes.CREATED).json(newProduct);
+  if (data.error) {
+    return next(data.error);
+  }
+
+  return res.status(StatusCodes.CREATED).json(data);
 }));
 
 router.put('/:id', validateProduct, rescue(async (req, res, _next) => {
