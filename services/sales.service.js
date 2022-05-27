@@ -52,14 +52,21 @@ async function updateSale(saleId, products) {
 }
 
 async function deleteSale(id) {
-  const [result] = await salesModel.getSaleById(id);
+  const [products] = await salesModel.getSaleById(id);
 
-  if (!result.length) {
+  if (!products.length) {
     return { error: { status: 404, message: 'Sale not found' } };
   }
 
   await salesProductModel.deleteSale(id);
-  salesModel.deleteSale(id);
+  await salesModel.deleteSale(id);
+
+  const updateProductsInStock = products.map(({ productId, quantity }) => (
+    productsModel.returnProductToStock(productId, quantity)
+  ));
+
+  Promise.all(updateProductsInStock);
+
   return {};
 }
 
