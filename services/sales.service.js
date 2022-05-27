@@ -23,9 +23,10 @@ async function createSale(products) {
 
   await Promise.all(bindPromises);
 
-  const updateProductsInStock = products.map(({ productId, quantity }) => (
-    productsModel.decreaseProductInStock(productId, quantity)
-  ));
+  const updateProductsInStock = products.map(({ productId, quantity }) => {
+    const updateQuantity = quantity * -1;
+    return productsModel.updateProductQuantityInStock(productId, updateQuantity);
+  });
 
   Promise.all(updateProductsInStock);
 
@@ -51,7 +52,7 @@ async function updateSale(saleId, products) {
   const updateProductsInStock = products.map(({ productId, quantity }) => {
     const updateQuantity = result.find(({ productId: id }) => id === productId).quantity - quantity;
 
-    return productsModel.updateProductInStock(productId, updateQuantity);
+    return productsModel.updateProductQuantityInStock(productId, updateQuantity);
   });
 
   Promise.all(updateProductsInStock);
@@ -70,7 +71,7 @@ async function deleteSale(id) {
   await salesModel.deleteSale(id);
 
   const updateProductsInStock = products.map(({ productId, quantity }) => (
-    productsModel.returnProductToStock(productId, quantity)
+    productsModel.updateProductQuantityInStock(productId, quantity)
   ));
 
   Promise.all(updateProductsInStock);

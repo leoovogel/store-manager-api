@@ -50,29 +50,7 @@ function deleteProduct(id) {
     [id]);
 }
 
-function decreaseProductInStock(productId, quantity) {
-  return database.execute(`
-    UPDATE
-      products
-    SET
-      quantity = quantity - ?
-    WHERE
-      id = ?`,
-    [quantity, productId]);
-}
-
-function returnProductToStock(productId, quantity) {
-  return database.execute(`
-    UPDATE
-      products
-    SET
-      quantity = quantity + ?
-    WHERE
-      id = ?`,
-    [quantity, productId]);
-}
-
-function updateProductInStock(productId, quantity) {
+function updateProductQuantityInStock(productId, quantity) {
   return database.execute(`
     UPDATE
       products
@@ -90,7 +68,5 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
-  decreaseProductInStock,
-  returnProductToStock,
-  updateProductInStock,
+  updateProductQuantityInStock,
 };
