@@ -1,5 +1,6 @@
 const salesModel = require('../models/sales.model');
 const salesProductModel = require('../models/salesProducts.model');
+const productsModel = require('../models/products.model');
 
 function getSales() {
   return salesModel.getAllSales();
@@ -21,6 +22,12 @@ async function createSale(products) {
   ));
 
   await Promise.all(bindPromises);
+
+  const updateProductsInStock = products.map(({ productId, quantity }) => (
+    productsModel.decreaseProductInStock(productId, quantity)
+  ));
+
+  Promise.all(updateProductsInStock);
 
   return {
     id: sale.insertId,
