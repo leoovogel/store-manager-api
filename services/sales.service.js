@@ -48,6 +48,14 @@ async function updateSale(saleId, products) {
 
   await Promise.all(updateSalePromises);
 
+  const updateProductsInStock = products.map(({ productId, quantity }) => {
+    const updateQuantity = result.find(({ productId: id }) => id === productId).quantity - quantity;
+
+    return productsModel.updateProductInStock(productId, updateQuantity);
+  });
+
+  Promise.all(updateProductsInStock);
+
   return { saleId, itemUpdated: products };
 }
 

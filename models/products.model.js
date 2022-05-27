@@ -72,6 +72,17 @@ function returnProductToStock(productId, quantity) {
     [quantity, productId]);
 }
 
+function updateProductInStock(productId, quantity) {
+  return database.execute(`
+    UPDATE
+      products
+    SET
+      quantity = quantity + ?
+    WHERE
+      id = ?`,
+    [quantity, productId]);
+}
+
 module.exports = {
   getAllProducts,
   getProductById,
@@ -81,4 +92,5 @@ module.exports = {
   deleteProduct,
   decreaseProductInStock,
   returnProductToStock,
+  updateProductInStock,
 };
