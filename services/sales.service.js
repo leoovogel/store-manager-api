@@ -11,6 +11,17 @@ function getSaleById(id) {
 }
 
 async function createSale(products) {
+  const productsInStock = await Promise.all(products
+    .map(({ productId }) => productsModel.getProductById(productId)));
+
+  const allProductsIsInStock = productsInStock
+    .map((product) => product[0][0])
+    .every(({ quantity }, index) => quantity >= products[index].quantity);
+
+  if (!allProductsIsInStock) {
+    return { error: { status: 422, message: 'Such amount is not permitted to sell' } };
+  }
+
   const [sale] = await salesModel.createSale();
 
   if (!sale.insertId) {
@@ -20,20 +31,15 @@ async function createSale(products) {
   const bindPromises = products.map(({ productId, quantity }) => (
     salesProductModel.bindSaleWithProducts(sale.insertId, { productId, quantity })
   ));
-
   await Promise.all(bindPromises);
 
   const updateProductsInStock = products.map(({ productId, quantity }) => {
     const updateQuantity = quantity * -1;
     return productsModel.updateProductQuantityInStock(productId, updateQuantity);
   });
-
   Promise.all(updateProductsInStock);
 
-  return {
-    id: sale.insertId,
-    itemsSold: products,
-  };
+  return { id: sale.insertId, itemsSold: products };
 }
 
 async function updateSale(saleId, products) {
