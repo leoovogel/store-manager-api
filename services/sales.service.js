@@ -1,6 +1,9 @@
 const salesModel = require('../models/sales.model');
 const salesProductModel = require('../models/salesProducts.model');
 const productsModel = require('../models/products.model');
+const {
+  INTERNAL_SERVER_ERROR, INSUFFICIENT_QUANTITY, SALE_NOT_FOUND,
+} = require('../utils/errorMessages');
 
 function getSales() {
   return salesModel.getAllSales();
@@ -18,26 +21,20 @@ async function createSale(products) {
     .map((product) => product[0][0])
     .every(({ quantity }, index) => quantity >= products[index].quantity);
 
-  if (!allProductsIsInStock) {
-    return { error: { status: 422, message: 'Such amount is not permitted to sell' } };
-  }
+  if (!allProductsIsInStock) return { error: INSUFFICIENT_QUANTITY };
 
   const [sale] = await salesModel.createSale();
 
-  if (!sale.insertId) {
-    return { error: { status: 500, message: 'Internal server error' } };
-  }
+  if (!sale.insertId) return { error: INTERNAL_SERVER_ERROR };
 
-  const bindPromises = products.map(({ productId, quantity }) => (
+  await Promise.all(products.map(({ productId, quantity }) => (
     salesProductModel.bindSaleWithProducts(sale.insertId, { productId, quantity })
-  ));
-  await Promise.all(bindPromises);
+  )));
 
-  const updateProductsInStock = products.map(({ productId, quantity }) => {
+  Promise.all(products.map(({ productId, quantity }) => {
     const updateQuantity = quantity * -1;
     return productsModel.updateProductQuantityInStock(productId, updateQuantity);
-  });
-  Promise.all(updateProductsInStock);
+  }));
 
   return { id: sale.insertId, itemsSold: products };
 }
@@ -45,9 +42,7 @@ async function createSale(products) {
 async function updateSale(saleId, products) {
   const [result] = await salesModel.getSaleById(saleId);
 
-  if (!result.length) {
-    return { error: { status: 404, message: 'Sale not found' } };
-  }
+  if (!result.length) return { error: SALE_NOT_FOUND };
 
   const updateSalePromises = products.map(({ productId, quantity }) => (
     salesProductModel.updateSales(saleId, productId, quantity)
@@ -69,9 +64,7 @@ async function updateSale(saleId, products) {
 async function deleteSale(id) {
   const [products] = await salesModel.getSaleById(id);
 
-  if (!products.length) {
-    return { error: { status: 404, message: 'Sale not found' } };
-  }
+  if (!products.length) return { error: SALE_NOT_FOUND };
 
   await salesProductModel.deleteSale(id);
   await salesModel.deleteSale(id);
