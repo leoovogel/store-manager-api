@@ -1,14 +1,9 @@
-const express = require('express');
-const rescue = require('express-rescue');
 const { StatusCodes } = require('http-status-codes');
 
 const productsService = require('../services/products.service');
-const validateProduct = require('../middlewares/validateProduct');
 const { PRODUCT_NOT_FOUND } = require('../utils/errorMessages');
 
-const router = express.Router();
-
-router.get('/:id', rescue(async (req, res, next) => {
+async function getProductById(req, res, next) {
   const { id } = req.params;
 
   const [product] = await productsService.getProductById(id);
@@ -18,15 +13,15 @@ router.get('/:id', rescue(async (req, res, next) => {
   }
 
   return res.status(StatusCodes.OK).json(product[0]);
-}));
+}
 
-router.get('/', rescue(async (_req, res) => {
+async function getAllProducts(_req, res) {
   const [products] = await productsService.getProducts();
 
   res.status(StatusCodes.OK).json(products);
-}));
+}
 
-router.post('/', validateProduct, rescue(async (req, res, next) => {
+async function createProduct(req, res, next) {
   const { name, quantity } = req.body;
 
   const data = await productsService.createProduct({ name, quantity });
@@ -34,9 +29,9 @@ router.post('/', validateProduct, rescue(async (req, res, next) => {
   if (data.error) return next(data.error);
 
   return res.status(StatusCodes.CREATED).json(data);
-}));
+}
 
-router.put('/:id', validateProduct, rescue(async (req, res, next) => {
+async function updateProduct(req, res, next) {
   const { name, quantity } = req.body;
   const { id } = req.params;
 
@@ -45,9 +40,9 @@ router.put('/:id', validateProduct, rescue(async (req, res, next) => {
   if (data.error) return next(data.error);
 
   return res.status(StatusCodes.OK).json(data);
-}));
+}
 
-router.delete('/:id', rescue(async (req, res, next) => {
+async function deleteProduct(req, res, next) {
   const { id } = req.params;
 
   const data = await productsService.deleteProduct(id);
@@ -55,6 +50,12 @@ router.delete('/:id', rescue(async (req, res, next) => {
   if (data.error) return next(data.error);
 
   return res.status(StatusCodes.NO_CONTENT).end();
-}));
+}
 
-module.exports = router;
+module.exports = {
+  getProductById,
+  getAllProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+};

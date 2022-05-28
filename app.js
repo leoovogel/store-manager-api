@@ -1,14 +1,12 @@
 const express = require('express');
 
-const routes = require('./routes');
-const error = require('./middlewares/error');
-
 const app = express();
+
 app.use(express.json());
 
-app.use(routes);
+app.use(require('./routes'));
 
-app.use(error);
+app.use(require('./middlewares/error'));
 
 app.get('/', (_request, response) => {
   response.send();
