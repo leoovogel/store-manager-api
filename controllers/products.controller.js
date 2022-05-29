@@ -6,19 +6,19 @@ const { PRODUCT_NOT_FOUND } = require('../utils/errorMessages');
 async function getProductById(req, res, next) {
   const { id } = req.params;
 
-  const [product] = await productsService.getProductById(id);
+  const data = await productsService.getProductById(id);
 
-  if (!product.length) {
+  if (!data) {
     return next(PRODUCT_NOT_FOUND);
   }
 
-  return res.status(StatusCodes.OK).json(product[0]);
+  return res.status(StatusCodes.OK).json(data);
 }
 
 async function getAllProducts(_req, res) {
-  const [products] = await productsService.getProducts();
+  const data = await productsService.getProducts();
 
-  res.status(StatusCodes.OK).json(products);
+  res.status(StatusCodes.OK).json(data);
 }
 
 async function createProduct(req, res, next) {

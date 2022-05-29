@@ -3,12 +3,14 @@ const {
   PRODUCT_ALREADY_EXISTS, PRODUCT_NOT_FOUND, INTERNAL_SERVER_ERROR,
 } = require('../utils/errorMessages');
 
-function getProducts() {
-  return productsModel.getAllProducts();
+async function getProducts() {
+  const [products] = await productsModel.getAllProducts();
+  return products;
 }
 
-function getProductById(id) {
-  return productsModel.getProductById(id);
+async function getProductById(id) {
+  const [product] = await productsModel.getProductById(id);
+  return product[0];
 }
 
 async function createProduct({ name, quantity }) {
