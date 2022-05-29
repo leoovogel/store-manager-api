@@ -6,19 +6,19 @@ const { SALE_NOT_FOUND } = require('../utils/errorMessages');
 async function getSaleById(req, res, next) {
   const { id } = req.params;
 
-  const [sales] = await salesService.getSaleById(id);
+  const data = await salesService.getSaleById(id);
 
-  if (!sales.length) {
+  if (!data) {
     return next(SALE_NOT_FOUND);
   }
 
-  return res.status(StatusCodes.OK).json(sales);
+  return res.status(StatusCodes.OK).json(data);
 }
 
 async function getAllSales(_req, res) {
-  const [sales] = await salesService.getSales();
+  const data = await salesService.getSales();
 
-  return res.status(StatusCodes.OK).json(sales);
+  return res.status(StatusCodes.OK).json(data);
 }
 
 async function createSale(req, res, next) {

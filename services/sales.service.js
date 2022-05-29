@@ -5,12 +5,14 @@ const {
   INTERNAL_SERVER_ERROR, INSUFFICIENT_QUANTITY, SALE_NOT_FOUND,
 } = require('../utils/errorMessages');
 
-function getSales() {
-  return salesModel.getAllSales();
+async function getSales() {
+  const [sales] = await salesModel.getAllSales();
+  return sales;
 }
 
 function getSaleById(id) {
-  return salesModel.getSaleById(id);
+  const [sale] = salesModel.getSaleById(id);
+  return sale[0];
 }
 
 async function createSale(products) {
