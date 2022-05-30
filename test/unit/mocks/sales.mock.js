@@ -1,6 +1,7 @@
 const errorMessages = {
   INTERNAL_SERVER_ERROR: { status: 500, message: 'Internal server error' },
   SALE_NOT_FOUND: { status: 404, message: 'Sale not found' },
+  INSUFFICIENT_QUANTITY: { status: 422, message: 'Such amount is not permitted to sell' },
 }
 
 const SALE_1 = { "saleId": 1, "date": "2021-09-09T04:54:29.000Z", "productId": 1, "quantity": 1 };

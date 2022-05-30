@@ -10,8 +10,8 @@ async function getSales() {
   return sales;
 }
 
-function getSaleById(id) {
-  const [sale] = salesModel.getSaleById(id);
+async function getSaleById(id) {
+  const [sale] = await salesModel.getSaleById(id);
   return sale[0];
 }
 
