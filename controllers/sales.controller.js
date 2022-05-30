@@ -8,7 +8,7 @@ async function getSaleById(req, res, next) {
 
   const data = await salesService.getSaleById(id);
 
-  if (!data) {
+  if (!data.length) {
     return next(SALE_NOT_FOUND);
   }
 

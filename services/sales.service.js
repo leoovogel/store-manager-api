@@ -12,7 +12,7 @@ async function getSales() {
 
 async function getSaleById(id) {
   const [sale] = await salesModel.getSaleById(id);
-  return sale[0];
+  return sale;
 }
 
 async function createSale(products) {
