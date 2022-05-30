@@ -71,7 +71,7 @@ describe('When calling controller on endpoint GET /sales/:id', () => {
   describe('When the searched sale exists in the database', () => {
     before(() => {
       req.params = { id: 1 };
-      sinon.stub(salesService, 'getSaleById').resolves(SALE_1);
+      sinon.stub(salesService, 'getSaleById').resolves([SALE_1]);
     });
 
     after(() => {
@@ -87,14 +87,14 @@ describe('When calling controller on endpoint GET /sales/:id', () => {
     it('Should return the sale', async () => {
       await salesController.getSaleById(req, res, next);
 
-      expect(res.json.calledWith(SALE_1)).to.be.true;
+      expect(res.json.calledWith([SALE_1])).to.be.true;
     });
   });
 
   describe('When there is no sale with the searched id', () => {
     before(() => {
       res.params = { id: 999 };
-      sinon.stub(salesService, 'getSaleById').returns(undefined);
+      sinon.stub(salesService, 'getSaleById').returns([]);
     });
 
     after(() => {

@@ -62,10 +62,11 @@ describe('Get sales by id', () => {
       salesModel.getSaleById.restore();
     });
 
-    it('Should return undefined', async () => {
+    it('Should return an empty array', async () => {
       const result = await salesService.getSaleById(999);
 
-      expect(result).to.be.undefined;
+      expect(result).to.be.an('array');
+      expect(result).to.be.empty;
     });
   });
 
@@ -78,16 +79,20 @@ describe('Get sales by id', () => {
       salesModel.getSaleById.restore();
     });
 
-    it('Should returns an object', async () => {
+    it('Should returns an array of objects', async () => {
       const result = await salesService.getSaleById(1);
 
-      expect(result).to.be.an('object');
+      expect(result).to.be.an('array');
+      expect(result).not.to.be.empty;
+
+      result.forEach((sale) => expect(sale).to.be.an('object'));
     });
 
-    it('The object must have the saleId, date, productId and quantity keys', async () => {
+    it('Every object in the array must have the saleId, date, productId and quantity keys', async () => {
       const result = await salesService.getSaleById(1);
-
-      expect(result).to.include.all.keys('saleId', 'date', 'productId', 'quantity');
+      
+      expect(result).not.to.be.empty;
+      result.forEach((sale) => expect(sale).to.include.all.keys('saleId', 'date', 'productId', 'quantity'));
     });
   });
 });
