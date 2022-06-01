@@ -1,0 +1,445 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Store Manager API",
+    "description": "API desenvolvida para estudo durante o curso de Desenvolvimento Web Full Stack da Trybe",
+    "contact": {
+      "email": "leeo.vog13@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/products": {
+      "post": {
+        "summary": "Cria um novo produto",
+        "description": "Rota responsável por cadastrar um novo produto",
+        "tags": ["products"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductBody"
+              },
+              "examples": {
+                "Product": {
+                  "summary": "Produto",
+                  "value": {
+                    "name": "Produto 1",
+                    "quantity": "10"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "409": {
+            "description": "Product already exists"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Lista todos os produtos",
+        "description": "Rota responsável por listar todos os produtos",
+        "tags": ["products"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "summary": "Busca um produto pelo ID",
+        "description": "Rota responsável por buscar um produto pelo ID",
+        "tags": ["products"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do produto",
+            "required": true
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Product not found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza produto pelo ID",
+        "description": "Rota responsável por atualizar um produto pelo ID",
+        "tags": ["products"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do produto",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              },
+              "examples": {
+                "Product": {
+                  "summary": "Produto",
+                  "value": {
+                    "name": "Produto 2",
+                    "quantity": "15"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "404": {
+            "description": "Product not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta um produto pelo ID",
+        "description": "Rota responsável por deletar um produto pelo ID",
+        "tags": ["products"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do produto",
+            "required": true
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Product not found"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/sales": {
+      "post": {
+        "summary": "Cria uma nova venda",
+        "description": "Rota responsável por cadastrar uma nova venda",
+        "tags": ["sales"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SaleBody"
+                }
+              },
+              "examples": {
+                "Sale": {
+                  "summary": "Venda",
+                  "value": [
+                  {
+                    "productId": 1,
+                    "quantity": 10
+                  },
+                  {
+                    "productId": 2,
+                    "quantity": 5
+                  }]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "422": {
+            "description": "Such amount is not permitted to sell"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "itemsSold": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SaleBody"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Lista todas as vendas",
+        "description": "Rota responsável por listar todas as vendas",
+        "tags": ["sales"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SaleWithId"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/{id}": {
+      "get": {
+        "summary": "Busca uma venda pelo ID",
+        "description": "Rota responsável por buscar uma venda pelo ID",
+        "tags": ["sales"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID da venda",
+            "required": true
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Sale not found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SaleWithoutId"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza venda pelo ID",
+        "description": "Rota responsável por atualizar uma venda pelo ID",
+        "tags": ["sales"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID da venda",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SaleBody"
+                }
+              },
+              "examples": {
+                "Sale": {
+                  "summary": "Venda",
+                  "value": [
+                  {
+                    "productId": 1,
+                    "quantity": 15
+                  },
+                  {
+                    "productId": 2,
+                    "quantity": 20
+                  }]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "404": {
+            "description": "Sale not found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "saleId": {
+                      "type": "number"
+                    },
+                    "itemUpdated": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SaleBody"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta uma venda pelo ID",
+        "description": "Rota responsável por deletar uma venda pelo ID",
+        "tags": ["sales"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID da venda",
+            "required": true
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Sale not found"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProductBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          }
+        }
+      },
+      "SaleBody": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "number"
+          }
+        }
+      },
+      "SaleWithId": {
+        "type": "object",
+        "properties": {
+          "saleId": {
+            "type": "number"
+          },
+          "date": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "number"
+          }
+        }
+      },
+      "SaleWithoutId": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}
