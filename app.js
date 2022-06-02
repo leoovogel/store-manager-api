@@ -5,7 +5,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(require('./swagger.json')));
+app.use('/', swaggerUi.serve, swaggerUi.setup(require('./utils/swagger.json')));
 
 app.use(require('./routes'));
 
